@@ -5,12 +5,16 @@ import ProtectedRoute from '@/components/Auth/protected-route';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LoadingProvider } from './contexts/LoadingContext';
 import Register from "./components/Auth/register"
-import Dashboard from "./components/Dashboard/dashboard"
-import Settings from "./components/Dashboard/settings"
-import MyAppointment from "./components/Dashboard/my-appointment"
-import Search from "./components/Dashboard/search"
-import BookNow from "./components/Dashboard/book-now"
-import Header from "./components/shared/Heder"
+import Dashboard from "./components/Users/dashboard"
+import Settings from "./components/Users/settings"
+import MyAppointment from "./components/Users/my-appointment"
+import Offer from "./components/Users/offers"
+import BookNow from "./components/Users/book-now"
+import Header from "./components/shared/Header"
+import Footer from './components/shared/footer';
+import Services from './components/Users/services';
+import Carts from './components/Users/Carts';
+import Profile from './components/Users/Profile';
 
 function AppContent() {
   const location = useLocation();
@@ -48,17 +52,21 @@ function AppContent() {
   return (
     <ProtectedRoute>
       <>
-        <Header />
+        <Header/>
         <Routes>
           <Route path="/home" element={<Dashboard />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/appointments" element={<MyAppointment />} />
-          <Route path="/offers" element={<Search />} />
+          <Route path="/offers" element={<Offer />} />
           <Route path="/book-now" element={<BookNow />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/cart" element={<Carts />} />
+          <Route path="/profile" element={<Profile/>} />
 
           {/* Catch all route - redirect to Dashboard */}
           <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
+        <Footer />
       </>
     </ProtectedRoute>
   );
