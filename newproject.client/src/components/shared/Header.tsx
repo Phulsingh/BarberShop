@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList} from '../ui/navigation-menu'
-import { Input } from '../ui/input'
+// import { Input } from '../ui/input'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Button } from '../ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet'
-import { Menu, LogOut, UserCircle, Settings } from 'lucide-react'
+import { Menu, LogOut, UserCircle, Settings, ShoppingCart } from 'lucide-react'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 
@@ -17,8 +17,9 @@ const Header = () => {
   const Navigate = useNavigate()
   const [isSheetOpen, setIsSheetOpen] = React.useState(false)
 
-  const navItems = [
+  const navItems = [  
     { label: 'Home', href: '/home' },
+    { label: 'Services', href: '/services' },
     { label: 'My Appointments', href: '/appointments' },
     { label: 'Book Now', href: '/book-now' },
     { label: 'Offers', href: '/offers' },
@@ -26,7 +27,7 @@ const Header = () => {
   ]
 
   const NavContent = () => (
-    <NavigationMenuList className="flex items-center gap-20">
+    <NavigationMenuList className="flex items-center gap-17">
       {navItems.map((item) => (
         <NavigationMenuItem key={item.href}>
           <Link
@@ -42,7 +43,7 @@ const Header = () => {
   )
 
   return (
-    <header className="border-b bg-gray-100">
+    <header className="border-b bg-gray-100 fixed top-0 left-0 right-0 z-50">
       <div className="container mx-auto px-4 md:px-10 h-16">
         <div className="flex items-center h-full relative">
           {/* Logo */}
@@ -61,7 +62,7 @@ const Header = () => {
 
           {/* Search and Profile */}
           <div className="flex items-center gap-4 ml-auto">
-            <div className="hidden md:block w-64 relative">
+            {/* <div className="hidden md:block w-64 relative">
               <Input
                 type="search"
                 placeholder="Search..."
@@ -81,7 +82,12 @@ const Header = () => {
                   d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                 />
               </svg>
-            </div>
+            </div> */}
+
+            <Button onClick={() => Navigate("/cart")} variant="ghost" className="p-2 h-8 w-8 relative cursor-pointer">
+              <ShoppingCart className="h-5 w-5" />
+              <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">0</span>
+            </Button>
 
             <div className="relative">
               <Popover>
@@ -95,13 +101,16 @@ const Header = () => {
                 </PopoverTrigger>
                 <PopoverContent className="w-35 p-2">
                   <div className="flex flex-col gap-1">
-                    <Button onClick={()=>{
+                    <Button onClick={() => {
                       Navigate("/profile")
                     }} variant="ghost" className="flex items-center gap-2 w-full justify-start cursor-pointer">
                       <UserCircle size={16} />
                       Profile
                     </Button>
-                    <Button variant="ghost" className="flex items-center gap-2 w-full justify-start cursor-pointer">
+                    <Button 
+                      onClick={() => {
+                        Navigate("/settings")
+                      }} variant="ghost" className="flex items-center gap-2 w-full justify-start cursor-pointer"> 
                       <Settings size={16} />
                       Settings
                     </Button>
@@ -124,17 +133,17 @@ const Header = () => {
                 </SheetTrigger>
                 <SheetContent side="right">
                   <div className="flex flex-col gap-4 mt-4">
-                    <Input
+                    {/* <Input
                       type="search"
                       placeholder="Search..."
                       className="rounded-full bg-gray-50"
-                    />
+                    />  */}
                     <nav className="flex flex-col gap-2">
                       {navItems.map((item) => (
                         <Link
                           key={item.href}
                           to={item.href}
-                          className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors p-2"
+                          className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors p-2 px-6"
                           onClick={() => setIsSheetOpen(false)}
                         >
                           {item.label}

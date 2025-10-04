@@ -1,7 +1,7 @@
 
 const Profile = () => {
   return (
-    <div>
+    <div className="mt-16">
       <h1>Profile Page</h1>
     </div>
   )

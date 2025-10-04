@@ -2,7 +2,7 @@
 
 const BookNow = () => {
   return (
-    <div>
+    <div className="mt-16">
       Book Now
     </div>
   )

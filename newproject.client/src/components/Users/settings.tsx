@@ -2,7 +2,7 @@
 
 const Settings = () => {
     return (
-        <div>
+        <div className="mt-16">
            Settings
         </div>
     )
