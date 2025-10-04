@@ -82,9 +82,9 @@ export function LoginPage() {
     <div className="min-h-screen flex items-center justify-center px-4">
       <Card className="w-full max-w-md card-enhanced">
         <CardHeader className="text-center">
-          <CardTitle>Welcome to Dealer Portal</CardTitle>
+          <CardTitle>Welcome to Barbar Shop</CardTitle>
           <CardDescription>
-            Sign in to your dealer account.
+            Sign in to your barbar shop account.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -116,7 +116,7 @@ export function LoginPage() {
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="absolute right-0 top-0 h-full px-3"
+                  className="absolute right-0 cursor-pointer top-0 h-full px-3"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
@@ -146,7 +146,7 @@ export function LoginPage() {
 
             <Button
               type="submit"
-              className="w-full"
+              className="w-full cursor-pointer"
               disabled={isLoading}
             >
               {isLoading ? "Signing in..." : "Sign In"}
@@ -156,12 +156,9 @@ export function LoginPage() {
           <div className="mt-6 text-center">
             <a
               href="#"
-              className="text-sm text-primary hover:underline"
-              onClick={(e) => {
-                e.preventDefault();
-                alert(
-                  "Password reset functionality would be implemented here.",
-                );
+              className="text-sm cursor-pointer text-primary hover:underline"
+              onClick={() => {
+                  navigate('register');
               }}
             >
               Forgot your password?
@@ -170,7 +167,7 @@ export function LoginPage() {
 
           <div className="mt-6 text-center text-sm text-muted-foreground">
             <p>Need help accessing your account?</p>
-            <p>Contact support at 1-800-DEALER-1</p>
+            <p>Contact support at BARBER-1</p>
           </div>
         </CardContent>
       </Card>
