@@ -19,6 +19,7 @@
     <PackageJsonDependenciesRadixUiReactLabel Condition="$(PackageJsonDependenciesRadixUiReactLabel) == ''">^2.1.7</PackageJsonDependenciesRadixUiReactLabel>
     <PackageJsonDependenciesRadixUiReactMenubar Condition="$(PackageJsonDependenciesRadixUiReactMenubar) == ''">^1.1.16</PackageJsonDependenciesRadixUiReactMenubar>
     <PackageJsonDependenciesRadixUiReactNavigationMenu Condition="$(PackageJsonDependenciesRadixUiReactNavigationMenu) == ''">^1.2.14</PackageJsonDependenciesRadixUiReactNavigationMenu>
+    <PackageJsonDependenciesRadixUiReactPopover Condition="$(PackageJsonDependenciesRadixUiReactPopover) == ''">^1.1.15</PackageJsonDependenciesRadixUiReactPopover>
     <PackageJsonDependenciesRadixUiReactRadioGroup Condition="$(PackageJsonDependenciesRadixUiReactRadioGroup) == ''">^1.3.8</PackageJsonDependenciesRadixUiReactRadioGroup>
     <PackageJsonDependenciesRadixUiReactScrollArea Condition="$(PackageJsonDependenciesRadixUiReactScrollArea) == ''">^1.2.10</PackageJsonDependenciesRadixUiReactScrollArea>
     <PackageJsonDependenciesRadixUiReactSelect Condition="$(PackageJsonDependenciesRadixUiReactSelect) == ''">^2.2.6</PackageJsonDependenciesRadixUiReactSelect>

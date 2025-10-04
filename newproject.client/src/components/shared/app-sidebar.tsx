@@ -1,5 +1,6 @@
 // src/components/app-sidebar.tsx
 import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import { Link } from "react-router-dom"
 import {
   Sidebar,
   SidebarContent,
@@ -13,10 +14,10 @@ import {
 
 // Menu items.
 const items = [
-  { title: "Dashboard", url: "/dashboard", icon: Home },
+  { title: "Dashboard", url: "/home", icon: Home },
   { title: "Book Now", url: "/book-now", icon: Inbox },
-  { title: "My Appointment", url: "/my-appointment", icon: Calendar },
-  { title: "Search", url: "/search", icon: Search },
+  { title: "My Appointments", url: "/appointments", icon: Calendar },
+  { title: "Search", url: "/offers", icon: Search },
   { title: "Settings", url: "/settings", icon: Settings },
 ]
 
@@ -33,10 +34,10 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url} className="flex items-center gap-2">
+                    <Link to={item.url} className="flex items-center gap-2">
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
