@@ -10,11 +10,13 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 
 import BarbarLogo from '@/assets/BarbarLogo.png'
 import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '@/contexts/AuthContext'
 
 
 const Header = () => {
   const isMobile = useIsMobile()
   const Navigate = useNavigate()
+  const { logout } = useAuth()
   const [isSheetOpen, setIsSheetOpen] = React.useState(false)
 
   const navItems = [  
@@ -25,6 +27,10 @@ const Header = () => {
     { label: 'Offers', href: '/offers' },
     { label: 'Settings', href: '/settings' }
   ]
+
+  const HandleLogout = () => {
+    logout();
+  }
 
   const NavContent = () => (
     <NavigationMenuList className="flex items-center gap-17">
@@ -84,7 +90,7 @@ const Header = () => {
               </svg>
             </div> */}
 
-            <Button onClick={() => Navigate("/cart")} variant="ghost" className="p-2 h-8 w-8 relative cursor-pointer">
+            <Button onClick={() => Navigate("/cart") } variant="ghost" className="p-2 h-8 w-8 relative cursor-pointer">
               <ShoppingCart className="h-5 w-5" />
               <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">0</span>
             </Button>
@@ -114,7 +120,11 @@ const Header = () => {
                       <Settings size={16} />
                       Settings
                     </Button>
-                    <Button variant="ghost" className="flex items-center gap-2 w-full justify-start cursor-pointer text-red-600 hover:text-red-700 hover:bg-red-50">
+                    <Button 
+                    onClick={()=>{
+                      HandleLogout();
+                    }}
+                     variant="ghost" className="flex items-center gap-2 w-full justify-start cursor-pointer text-red-600 hover:text-red-700 hover:bg-red-50">
                       <LogOut size={16} />
                       Log out
                     </Button>
