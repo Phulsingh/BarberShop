@@ -1,8 +1,9 @@
 
+
 const Dashboard = () => {
   return (
     <div className="w-full">
-      Dashboard
+     Dashboard Page
     </div>
   )
 }

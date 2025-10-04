@@ -10,6 +10,7 @@ import Settings from "./components/Dashboard/settings"
 import MyAppointment from "./components/Dashboard/my-appointment"
 import Search from "./components/Dashboard/search"
 import BookNow from "./components/Dashboard/book-now"
+import Header from "./components/shared/Heder"
 
 function AppContent() {
   const location = useLocation();
@@ -46,16 +47,19 @@ function AppContent() {
   // For authenticated users, render protected routes
   return (
     <ProtectedRoute>
-      <Routes>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/my-appointment" element={<MyAppointment />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/book-now" element={<BookNow />} />
+      <>
+        <Header />
+        <Routes>
+          <Route path="/home" element={<Dashboard />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/appointments" element={<MyAppointment />} />
+          <Route path="/offers" element={<Search />} />
+          <Route path="/book-now" element={<BookNow />} />
 
-        {/* Catch all route - redirect to Dashboard */}  
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
-      </Routes>
+          {/* Catch all route - redirect to Dashboard */}
+          <Route path="*" element={<Navigate to="/home" replace />} />
+        </Routes>
+      </>
     </ProtectedRoute>
   );
 }
