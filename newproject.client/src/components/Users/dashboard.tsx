@@ -8,27 +8,33 @@ import { useNavigate } from "react-router-dom";
 const Dashboard = () => {
   const navigate = useNavigate();
   // Static data for demonstration
-  const services = [
+    const services = [
     {
       id: 1,
       name: "Classic Haircut",
       price: "$25",
       duration: "30 min",
-      image: "https://cdn.shopify.com/s/files/1/0899/2676/2789/files/Classic_Side_Part.jpg?v=1735326797"
+      description: "Traditional haircut with precision trimming and styling",
+      image: "https://cdn.shopify.com/s/files/1/0899/2676/2789/files/Classic_Side_Part.jpg?v=1735326797",
+      category: "Hair"
     },
     {
       id: 2,
       name: "Beard Trim",
       price: "$15",
       duration: "20 min",
-      image: "https://i.ytimg.com/vi/MakC821Jty8/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLC6Zk2wSyF0TzqOsCzhPCMfGMdLqA"
+      description: "Professional beard shaping and trimming service",
+      image: "https://i.ytimg.com/vi/MakC821Jty8/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLC6Zk2wSyF0TzqOsCzhPCMfGMdLqA",
+      category: "Beard"
     },
     {
       id: 3,
       name: "Hair Color",
       price: "$50",
       duration: "60 min",
-      image: "https://static.vecteezy.com/system/resources/thumbnails/056/634/373/small_2x/a-young-man-with-red-hair-and-a-turtle-neck-photo.jpeg"
+      description: "Full hair coloring service with premium products",
+      image: "https://static.vecteezy.com/system/resources/thumbnails/056/634/373/small_2x/a-young-man-with-red-hair-and-a-turtle-neck-photo.jpeg",
+      category: "Color"
     }
   ];
 
@@ -115,13 +121,14 @@ const Dashboard = () => {
 
 
       {/* Services Section */}
+      
+      {/* Services Grid */}
       <section className="mb-12">
-        <h2 className="text-3xl font-bold mb-6">Our Services</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service) => (
             <Card key={service.id} className="p-4 flex flex-col">
-              {/* Image */}
-              <div className="aspect-video rounded-lg overflow-hidden ">
+              {/* Service Image */}
+              <div className="aspect-video rounded-lg overflow-hidden mb-4">
                 <img
                   src={service.image}
                   alt={service.name}
@@ -129,26 +136,32 @@ const Dashboard = () => {
                 />
               </div>
 
-              {/* Content */}
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="text-xl font-semibold">{service.name}</h3>
-                  <p className="text-2xl font-bold text-primary">{service.price}</p>
+              {/* Service Details */}
+              <div className="flex flex-col flex-grow">
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <h3 className="text-xl font-semibold">{service.name}</h3>
+                    <span className="inline-block px-2 py-1 text-sm bg-primary/10 text-primary rounded-full">
+                      {service.category}
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-2xl font-bold text-primary">{service.price}</p>
+                    <p className="text-sm text-gray-600">{service.duration}</p>
+                  </div>
                 </div>
-                <div>
-                  <p>Time</p>
-                  <p className="text-gray-600">{service.duration}</p>
-                </div>
-              </div>
 
-              {/* Buttons */}
-              <div className="mt-auto flex gap-2">
-                <button className="flex-1 cursor-pointer bg-primary text-white py-2 rounded-lg hover:bg-primary/90 transition">
-                  Book Now
-                </button>
-                <button className="flex-1 cursor-pointer border border-primary text-primary py-2 rounded-lg hover:bg-primary hover:text-white transition">
-                  Add to Cart
-                </button>
+                <p className="text-gray-600 mb-4">{service.description}</p>
+
+                {/* Action Buttons */}
+                <div className="mt-auto flex gap-2">
+                  <Button className="flex-1" variant="default">
+                    Book Now
+                  </Button>
+                  <Button className="flex-1" variant="outline">
+                    Add to Cart
+                  </Button>
+                </div>
               </div>
             </Card>
           ))}
