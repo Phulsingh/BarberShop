@@ -27,6 +27,7 @@
     <PackageJsonDependenciesRadixUiReactSlider Condition="$(PackageJsonDependenciesRadixUiReactSlider) == ''">^1.3.6</PackageJsonDependenciesRadixUiReactSlider>
     <PackageJsonDependenciesRadixUiReactSlot Condition="$(PackageJsonDependenciesRadixUiReactSlot) == ''">^1.2.3</PackageJsonDependenciesRadixUiReactSlot>
     <PackageJsonDependenciesRadixUiReactSwitch Condition="$(PackageJsonDependenciesRadixUiReactSwitch) == ''">^1.2.6</PackageJsonDependenciesRadixUiReactSwitch>
+    <PackageJsonDependenciesRadixUiReactTabs Condition="$(PackageJsonDependenciesRadixUiReactTabs) == ''">^1.1.13</PackageJsonDependenciesRadixUiReactTabs>
     <PackageJsonDependenciesRadixUiReactTooltip Condition="$(PackageJsonDependenciesRadixUiReactTooltip) == ''">^1.2.8</PackageJsonDependenciesRadixUiReactTooltip>
     <PackageJsonDependenciesTailwindcssVite Condition="$(PackageJsonDependenciesTailwindcssVite) == ''">^4.1.13</PackageJsonDependenciesTailwindcssVite>
     <PackageJsonDependenciesAxios Condition="$(PackageJsonDependenciesAxios) == ''">^1.12.2</PackageJsonDependenciesAxios>

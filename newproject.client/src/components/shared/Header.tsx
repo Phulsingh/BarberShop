@@ -9,7 +9,7 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 
 import BarbarLogo from '@/assets/BarbarLogo.png'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 
 
@@ -32,21 +32,29 @@ const Header = () => {
     logout();
   }
 
-  const NavContent = () => (
-    <NavigationMenuList className="flex items-center gap-17">
-      {navItems.map((item) => (
-        <NavigationMenuItem key={item.href}>
-          <Link
-            key={item.href}
-            to={item.href}
-            className="text-sm  font-medium text-gray-700 hover:text-gray-900 transition-colors"
-          >
-            {item.label}
-          </Link>
-        </NavigationMenuItem>
-      ))}
-    </NavigationMenuList>
-  )
+  const NavContent = () => {
+    const location = useLocation();
+    
+    return (
+      <NavigationMenuList className="flex items-center gap-17">
+        {navItems.map((item) => (
+          <NavigationMenuItem key={item.href}>
+            <Link
+              key={item.href}
+              to={item.href}
+              className={`text-sm font-medium transition-colors ${
+                location.pathname === item.href
+                  ? "text-blue-600 font-semibold"
+                  : "text-gray-700 hover:text-gray-900"
+              }`}
+            >
+              {item.label}
+            </Link>
+          </NavigationMenuItem>
+        ))}
+      </NavigationMenuList>
+    );
+  }
 
   return (
     <header className="border-b bg-gray-100 fixed top-0 left-0 right-0 z-50">
@@ -153,7 +161,11 @@ const Header = () => {
                         <Link
                           key={item.href}
                           to={item.href}
-                          className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors p-2 px-6"
+                          className={`text-sm font-medium transition-colors p-2 px-6 ${
+                            location.pathname === item.href
+                              ? "text-blue-600 font-semibold bg-blue-50"
+                              : "text-gray-700 hover:text-gray-900"
+                          }`}
                           onClick={() => setIsSheetOpen(false)}
                         >
                           {item.label}
