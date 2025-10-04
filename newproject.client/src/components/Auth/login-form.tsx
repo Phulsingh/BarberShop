@@ -50,7 +50,7 @@ export function LoginPage() {
 
     try {
       // Call login service
-      const response = await authService.login({
+      await authService.login({
         email,
         password
       });
