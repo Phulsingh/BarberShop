@@ -8,6 +8,7 @@ namespace NewProject.Server.Data
     : DbContext(options)
     {
         public DbSet<User> Users => Set<User>();
+        public DbSet<BarbarServices> BarbarServices => Set<BarbarServices>();
     }
 }
 
