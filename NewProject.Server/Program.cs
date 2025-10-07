@@ -6,20 +6,20 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add CORS configuration
+// 🟡 1️⃣ CORS — React Dev URL support
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp",
-        policy =>
-        {
-            policy
-                .WithOrigins("http://localhost:5173", "https://localhost:5173") // Add your React app URLs
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials();
-        });
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:5173", "https://localhost:5173") // React dev URLs
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
 });
 
+// 🟡 2️⃣ Controllers & Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -49,12 +49,13 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// Add DbContext
+// 🟡 3️⃣ EF Core DbContext
 builder.Services.AddDbContext<AppDbContext>(opts =>
     opts.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConn")));
 
-// 1️⃣ Add JWT authentication service
+// 🟡 4️⃣ JWT Auth
 var jwtSettings = builder.Configuration.GetSection("Jwt");
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -78,26 +79,30 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-app.UseDefaultFiles();
-app.UseStaticFiles();
-
-// Swagger
+// 🟡 5️⃣ Middleware Order (IMPORTANT!)
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+// ✅ Serve wwwroot files
+app.UseDefaultFiles();    // Looks for index.html in wwwroot
+app.UseStaticFiles();     // Serves static files like images, js, css
+
 app.UseHttpsRedirection();
 
-// Enable CORS
+// ✅ CORS
 app.UseCors("AllowReactApp");
 
-// 2️⃣ Add authentication middleware BEFORE authorization
+// ✅ Auth — must come after CORS but before MapControllers
 app.UseAuthentication();
 app.UseAuthorization();
 
+// ✅ Map Controllers
 app.MapControllers();
+
+// ✅ Fallback for React Router (SPA)
 app.MapFallbackToFile("/index.html");
 
 app.Run();
