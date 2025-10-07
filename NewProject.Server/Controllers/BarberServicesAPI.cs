@@ -10,19 +10,21 @@ namespace NewProject.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]  // Only allows Admin role
+    [Authorize(Roles = "Admin")]  // Only Admins can modify services
     public class BarberServicesAPI : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IWebHostEnvironment _env;
 
-        public BarberServicesAPI(AppDbContext context)
+        public BarberServicesAPI(AppDbContext context, IWebHostEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
-        // GET: api/BarberServices
+        // ✅ GET: api/BarberServices
         [HttpGet]
-        [AllowAnonymous] // Allow all users to view services
+        [AllowAnonymous] // Anyone can view
         public async Task<ActionResult<IEnumerable<BarbarServiceDTO>>> GetServices()
         {
             var services = await _context.BarbarServices
@@ -33,23 +35,22 @@ namespace NewProject.Server.Controllers
                     Price = s.Price,
                     DurationInMinutes = s.DurationInMinutes,
                     Category = s.Category,
-                    Offer = s.Offer
+                    Offer = s.Offer,
+                    Description = s.Description,
+                    ImageUrl = s.ImageUrl
                 })
                 .ToListAsync();
 
             return Ok(services);
         }
 
-        // GET: api/BarberServices/5
+        // ✅ GET: api/BarberServices/5
         [HttpGet("{id}")]
         [AllowAnonymous]
         public async Task<ActionResult<BarbarServiceDTO>> GetService(int id)
         {
             var service = await _context.BarbarServices.FindAsync(id);
-            if (service == null)
-            {
-                return NotFound();
-            }
+            if (service == null) return NotFound();
 
             var serviceDTO = new BarbarServiceDTO
             {
@@ -58,23 +59,58 @@ namespace NewProject.Server.Controllers
                 Price = service.Price,
                 DurationInMinutes = service.DurationInMinutes,
                 Category = service.Category,
-                Offer = service.Offer
+                Offer = service.Offer,
+                Description = service.Description,
+                ImageUrl = service.ImageUrl
             };
 
             return Ok(serviceDTO);
         }
 
-        // POST: api/BarberServices
+        // ✅ POST: api/BarberServices (With Image Upload)
         [HttpPost]
-        public async Task<ActionResult<BarbarServiceDTO>> CreateService(BarbarServiceDTO serviceDTO)
+        public async Task<ActionResult<BarbarServiceDTO>> CreateService([FromForm] BarbarServiceCreateModel model)
         {
+            string imageUrl = string.Empty;
+
+            // 📸 Handle Image Upload
+            if (model.Image != null && model.Image.Length > 0)
+            {
+                var allowedExts = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                var ext = Path.GetExtension(model.Image.FileName).ToLowerInvariant();
+                if (!allowedExts.Contains(ext))
+                    return BadRequest("Only .jpg, .jpeg, .png, .gif files are allowed.");
+
+                const long maxFileSize = 2 * 1024 * 1024; // 2MB
+                if (model.Image.Length > maxFileSize)
+                    return BadRequest("File too large. Max 2MB allowed.");
+
+                var uploadsFolder = Path.Combine(
+                    _env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"),
+                    "uploads", "services"
+                );
+                Directory.CreateDirectory(uploadsFolder);
+
+                var fileName = $"{Guid.NewGuid()}{ext}";
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.Image.CopyToAsync(stream);
+                }
+
+                imageUrl = $"{Request.Scheme}://{Request.Host}/uploads/services/{fileName}";
+            }
+
             var service = new BarbarServices
             {
-                Name = serviceDTO.Name,
-                Price = serviceDTO.Price,
-                DurationInMinutes = serviceDTO.DurationInMinutes,
-                Category = serviceDTO.Category,
-                Offer = serviceDTO.Offer,
+                Name = model.Name,
+                Price = model.Price,
+                DurationInMinutes = model.DurationInMinutes,
+                Category = model.Category,
+                Offer = model.Offer,
+                Description = model.Description,
+                ImageUrl = imageUrl,
                 CreatedAt = DateTime.UtcNow,
                 CreatedBy = User.FindFirst(ClaimTypes.Email)?.Value ?? "system"
             };
@@ -82,32 +118,62 @@ namespace NewProject.Server.Controllers
             _context.BarbarServices.Add(service);
             await _context.SaveChangesAsync();
 
-            serviceDTO.Id = service.Id;
-            return CreatedAtAction(nameof(GetService), new { id = service.Id }, serviceDTO);
+            var dto = new BarbarServiceDTO
+            {
+                Id = service.Id,
+                Name = service.Name,
+                Price = service.Price,
+                DurationInMinutes = service.DurationInMinutes,
+                Category = service.Category,
+                Offer = service.Offer,
+                Description = service.Description,
+                ImageUrl = service.ImageUrl
+            };
+
+            return CreatedAtAction(nameof(GetService), new { id = service.Id }, dto);
         }
 
-        // PUT: api/BarberServices/5
+        // ✅ PUT: api/BarberServices/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateService(int id, BarbarServiceDTO serviceDTO)
+        public async Task<IActionResult> UpdateService(int id, [FromForm] BarbarServiceCreateModel model)
         {
-            if (id != serviceDTO.Id)
-            {
-                return BadRequest();
-            }
-
             var service = await _context.BarbarServices.FindAsync(id);
-            if (service == null)
-            {
-                return NotFound();
-            }
+            if (service == null) return NotFound();
 
-            service.Name = serviceDTO.Name;
-            service.Price = serviceDTO.Price;
-            service.DurationInMinutes = serviceDTO.DurationInMinutes;
-            service.Category = serviceDTO.Category;
-            service.Offer = serviceDTO.Offer;
+            service.Name = model.Name;
+            service.Price = model.Price;
+            service.DurationInMinutes = model.DurationInMinutes;
+            service.Category = model.Category;
+            service.Offer = model.Offer;
+            service.Description = model.Description;
             service.UpdatedAt = DateTime.UtcNow;
             service.UpdatedBy = User.FindFirst(ClaimTypes.Email)?.Value ?? "system";
+
+            // 📸 Optional: Replace Image if new one uploaded
+            if (model.Image != null && model.Image.Length > 0)
+            {
+                // delete old image if exists
+                if (!string.IsNullOrEmpty(service.ImageUrl))
+                {
+                    var oldFileName = Path.GetFileName(new Uri(service.ImageUrl).AbsolutePath);
+                    var oldPath = Path.Combine(_env.WebRootPath, "uploads", "services", oldFileName);
+                    if (System.IO.File.Exists(oldPath))
+                        System.IO.File.Delete(oldPath);
+                }
+
+                var ext = Path.GetExtension(model.Image.FileName).ToLowerInvariant();
+                var fileName = $"{Guid.NewGuid()}{ext}";
+                var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads", "services");
+                Directory.CreateDirectory(uploadsFolder);
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.Image.CopyToAsync(stream);
+                }
+
+                service.ImageUrl = $"{Request.Scheme}://{Request.Host}/uploads/services/{fileName}";
+            }
 
             try
             {
@@ -115,24 +181,27 @@ namespace NewProject.Server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ServiceExists(id))
-                {
-                    return NotFound();
-                }
+                if (!ServiceExists(id)) return NotFound();
                 throw;
             }
 
             return NoContent();
         }
 
-        // DELETE: api/BarberServices/5
+        // ✅ DELETE: api/BarberServices/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteService(int id)
         {
             var service = await _context.BarbarServices.FindAsync(id);
-            if (service == null)
+            if (service == null) return NotFound();
+
+            // Delete image file if exists
+            if (!string.IsNullOrEmpty(service.ImageUrl))
             {
-                return NotFound();
+                var fileName = Path.GetFileName(new Uri(service.ImageUrl).AbsolutePath);
+                var filePath = Path.Combine(_env.WebRootPath, "uploads", "services", fileName);
+                if (System.IO.File.Exists(filePath))
+                    System.IO.File.Delete(filePath);
             }
 
             _context.BarbarServices.Remove(service);
@@ -141,9 +210,7 @@ namespace NewProject.Server.Controllers
             return NoContent();
         }
 
-        private bool ServiceExists(int id)
-        {
-            return _context.BarbarServices.Any(e => e.Id == id);
-        }
+        private bool ServiceExists(int id) =>
+            _context.BarbarServices.Any(e => e.Id == id);
     }
 }

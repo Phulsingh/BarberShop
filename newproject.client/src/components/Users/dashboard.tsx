@@ -4,39 +4,57 @@ import { Calendar } from "../ui/calendar";
 import { Card } from "../ui/card";
 import Banner from "../../assets/Banner.png"
 import { useNavigate } from "react-router-dom";
+import { useBarberServices } from "@/services/BarberServices";
+import type { IBarberService } from "@/services/BarberServices";
+import { useEffect, useState } from "react";
 
 const Dashboard = () => {
+
+  const [services, setServices] = useState<IBarberService[]>([]);
+  console.log('Services State:', services);
+
+
+  const { getAllServices } = useBarberServices();
+
+  useEffect(()=>{
+    const fetchServices = async () => {
+      const allServices = await getAllServices();
+      setServices(allServices); // Assuming the API response has a 'data' field containing the services
+    };
+    fetchServices();
+  }, [])
+
   const navigate = useNavigate();
   // Static data for demonstration
-    const services = [
-    {
-      id: 1,
-      name: "Classic Haircut",
-      price: "$25",
-      duration: "30 min",
-      description: "Traditional haircut with precision trimming and styling",
-      image: "https://cdn.shopify.com/s/files/1/0899/2676/2789/files/Classic_Side_Part.jpg?v=1735326797",
-      category: "Hair"
-    },
-    {
-      id: 2,
-      name: "Beard Trim",
-      price: "$15",
-      duration: "20 min",
-      description: "Professional beard shaping and trimming service",
-      image: "https://i.ytimg.com/vi/MakC821Jty8/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLC6Zk2wSyF0TzqOsCzhPCMfGMdLqA",
-      category: "Beard"
-    },
-    {
-      id: 3,
-      name: "Hair Color",
-      price: "$50",
-      duration: "60 min",
-      description: "Full hair coloring service with premium products",
-      image: "https://static.vecteezy.com/system/resources/thumbnails/056/634/373/small_2x/a-young-man-with-red-hair-and-a-turtle-neck-photo.jpeg",
-      category: "Color"
-    }
-  ];
+  //   const services = [
+  //   {
+  //     id: 1,
+  //     name: "Classic Haircut",
+  //     price: "$25",
+  //     duration: "30 min",
+  //     description: "Traditional haircut with precision trimming and styling",
+  //     image: "https://cdn.shopify.com/s/files/1/0899/2676/2789/files/Classic_Side_Part.jpg?v=1735326797",
+  //     category: "Hair"
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Beard Trim",
+  //     price: "$15",
+  //     duration: "20 min",
+  //     description: "Professional beard shaping and trimming service",
+  //     image: "https://i.ytimg.com/vi/MakC821Jty8/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLC6Zk2wSyF0TzqOsCzhPCMfGMdLqA",
+  //     category: "Beard"
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Hair Color",
+  //     price: "$50",
+  //     duration: "60 min",
+  //     description: "Full hair coloring service with premium products",
+  //     image: "https://static.vecteezy.com/system/resources/thumbnails/056/634/373/small_2x/a-young-man-with-red-hair-and-a-turtle-neck-photo.jpeg",
+  //     category: "Color"
+  //   }
+  // ];
 
 
   const offers = [
@@ -130,7 +148,7 @@ const Dashboard = () => {
               {/* Service Image */}
               <div className="aspect-video rounded-lg overflow-hidden mb-4">
                 <img
-                  src={service.image}
+                  src={service.imageUrl}
                   alt={service.name}
                   className="w-full h-full object-cover"
                 />
@@ -146,8 +164,8 @@ const Dashboard = () => {
                     </span>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-bold text-primary">{service.price}</p>
-                    <p className="text-sm text-gray-600">{service.duration}</p>
+                    <p className="text-2xl font-bold text-primary">₹{service.price}</p>
+                    <p className="text-sm text-gray-600">{service.durationInMinutes} min</p>
                   </div>
                 </div>
 
