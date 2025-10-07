@@ -1,66 +1,24 @@
-
+import { useEffect, useState } from "react";
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
+import { useBarberServices } from "@/services/BarberServices";
+import type { IBarberService } from "@/services/BarberServices";
+
 
 const Services = () => {
-  // Static services data (will be replaced with API data later)
-  const services = [
-    {
-      id: 1,
-      name: "Classic Haircut",
-      price: "$25",
-      duration: "30 min",
-      description: "Traditional haircut with precision trimming and styling",
-      image: "https://cdn.shopify.com/s/files/1/0899/2676/2789/files/Classic_Side_Part.jpg?v=1735326797",
-      category: "Hair"
-    },
-    {
-      id: 2,
-      name: "Beard Trim",
-      price: "$15",
-      duration: "20 min",
-      description: "Professional beard shaping and trimming service",
-      image: "https://i.ytimg.com/vi/MakC821Jty8/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLC6Zk2wSyF0TzqOsCzhPCMfGMdLqA",
-      category: "Beard"
-    },
-    {
-      id: 3,
-      name: "Hair Color",
-      price: "$50",
-      duration: "60 min",
-      description: "Full hair coloring service with premium products",
-      image: "https://static.vecteezy.com/system/resources/thumbnails/056/634/373/small_2x/a-young-man-with-red-hair-and-a-turtle-neck-photo.jpeg",
-      category: "Color"
-    },
-    {
-      id: 4,
-      name: "Hot Towel Shave",
-      price: "$30",
-      duration: "45 min",
-      description: "Luxurious traditional hot towel shave experience",
-      image: "https://images.unsplash.com/photo-1621605815971-fbc98d665033",
-      category: "Shave"
-    },
-    {
-      id: 5,
-      name: "Hair & Beard Combo",
-      price: "$35",
-      duration: "50 min",
-      description: "Complete grooming package with haircut and beard trim",
-      image: "https://images.unsplash.com/photo-1622286342621-4bd786c422e4",
-      category: "Combo"
-    },
-    {
-      id: 6,
-      name: "Kids Haircut",
-      price: "$20",
-      duration: "25 min",
-      description: "Gentle and fun haircuts for children",
-      image: "https://images.unsplash.com/photo-1626285861696-9f0bf5a49c6d",
-      category: "Hair"
-    }
-  ];
 
+   const [services, setServices] = useState<IBarberService[]>([]);
+
+  const { getAllServices } = useBarberServices();
+
+  useEffect(()=>{
+    const fetchServices = async () => {
+      const allServices = await getAllServices();
+      setServices(allServices); // Assuming the API response has a 'data' field containing the services
+    };
+    fetchServices();
+  }, [])
+ 
   return (
     <div className="w-full mt-16 max-w-7xl mx-auto px-4 py-8">
       {/* Hero Section */}
@@ -80,7 +38,7 @@ const Services = () => {
               {/* Service Image */}
               <div className="aspect-video rounded-lg overflow-hidden mb-4">
                 <img
-                  src={service.image}
+                  src={service.imageUrl}
                   alt={service.name}
                   className="w-full h-full object-cover"
                 />
@@ -97,7 +55,7 @@ const Services = () => {
                   </div>
                   <div className="text-right">
                     <p className="text-2xl font-bold text-primary">{service.price}</p>
-                    <p className="text-sm text-gray-600">{service.duration}</p>
+                    <p className="text-sm text-gray-600">{service.durationInMinutes} min</p>
                   </div>
                 </div>
 
