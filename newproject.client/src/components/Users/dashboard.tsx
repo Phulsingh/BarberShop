@@ -11,8 +11,7 @@ import { useEffect, useState } from "react";
 const Dashboard = () => {
 
   const [services, setServices] = useState<IBarberService[]>([]);
-  console.log('Services State:', services);
-
+ 
 
   const { getAllServices } = useBarberServices();
 
