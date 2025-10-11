@@ -62,7 +62,7 @@ const Header = () => {
         <div className="flex items-center h-full relative">
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer">
-            <img src={BarbarLogo} alt="Logo" className="h-15 w-15" />
+            <img onClick={() => Navigate("/home")} src={BarbarLogo} alt="Logo" className="h-15 w-15" />
           </div>
 
           {/* Desktop Navigation - Centered */}
