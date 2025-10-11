@@ -150,10 +150,12 @@ C:\Users\hp\Desktop\NewProject\NewProject.Server\obj\Debug\net8.0\staticwebasset
 C:\Users\hp\Desktop\NewProject\NewProject.Server\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\hp\Desktop\NewProject\NewProject.Server\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\hp\Desktop\NewProject\NewProject.Server\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\hp\Desktop\NewProject\NewProject.Server\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\hp\Desktop\NewProject\NewProject.Server\obj\Debug\net8.0\NewProje.DE9759D0.Up2Date
 C:\Users\hp\Desktop\NewProject\NewProject.Server\obj\Debug\net8.0\NewProject.Server.dll
 C:\Users\hp\Desktop\NewProject\NewProject.Server\obj\Debug\net8.0\refint\NewProject.Server.dll
 C:\Users\hp\Desktop\NewProject\NewProject.Server\obj\Debug\net8.0\NewProject.Server.pdb
 C:\Users\hp\Desktop\NewProject\NewProject.Server\obj\Debug\net8.0\NewProject.Server.genruntimeconfig.cache
 C:\Users\hp\Desktop\NewProject\NewProject.Server\obj\Debug\net8.0\ref\NewProject.Server.dll
+C:\Users\hp\Desktop\NewProject\NewProject.Server\bin\Debug\net8.0\NewProject.Server.staticwebassets.runtime.json
+C:\Users\hp\Desktop\NewProject\NewProject.Server\obj\Debug\net8.0\NewProject.Server.sourcelink.json
+C:\Users\hp\Desktop\NewProject\NewProject.Server\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
