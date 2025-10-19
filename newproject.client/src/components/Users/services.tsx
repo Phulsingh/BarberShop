@@ -3,22 +3,63 @@ import { Card } from "../ui/card";
 import { Button } from "../ui/button";
 import { useBarberServices } from "@/services/BarberServices";
 import type { IBarberService } from "@/services/BarberServices";
+import { useCartServices } from '@/services/cartServices';
 
 
 const Services = () => {
 
-   const [services, setServices] = useState<IBarberService[]>([]);
-
+  const [services, setServices] = useState<IBarberService[]>([]);
   const { getAllServices } = useBarberServices();
+  const cartServices = useCartServices();
+  const [addedServices, setAddedServices] = useState<number[]>([]);
+ 
 
-  useEffect(()=>{
+  useEffect(() => {
     const fetchServices = async () => {
       const allServices = await getAllServices();
       setServices(allServices); // Assuming the API response has a 'data' field containing the services
     };
     fetchServices();
   }, [])
- 
+
+
+  
+
+  useEffect(() => {
+    const fetchServicesAndCart = async () => {
+      try {
+        // Fetch all services
+        const allServices = await getAllServices();
+        setServices(allServices);
+
+        // Fetch cart items and update addedServices state
+        const cartItems = await cartServices.getCartItems();
+        const cartServiceIds = cartItems.map(item => item.serviceId);
+        setAddedServices(cartServiceIds);
+      } catch (error) {
+        console.error('Error fetching services and cart:', error);
+      }
+    };
+    fetchServicesAndCart();
+  }, [])
+
+  
+  const handleAddToCart = async (serviceId: number) => {
+    try {
+      console.log('Adding to cart:', serviceId);
+      await cartServices.addToCart(serviceId);
+      setAddedServices((prev) => [...prev, serviceId]);
+       alert("Service added to cart!");
+    } catch (error: any) {
+      console.error('Add to cart error:', error);
+      alert("Failed to add service to cart.");
+    }
+  };
+
+
+
+
+
   return (
     <div className="w-full mt-16 max-w-7xl mx-auto px-4 py-8">
       {/* Hero Section */}
@@ -66,8 +107,13 @@ const Services = () => {
                   <Button className="flex-1" variant="default">
                     Book Now
                   </Button>
-                  <Button className="flex-1" variant="outline">
-                    Add to Cart
+                  <Button
+                    className="flex-1"
+                    variant="outline"
+                    onClick={() => service.id && handleAddToCart(service.id)}
+                    disabled={Boolean(service.id && addedServices.includes(service.id))}
+                  >
+                    {Boolean(service.id && addedServices.includes(service.id)) ? "Added ✅" : "Add to Cart"}
                   </Button>
                 </div>
               </div>
