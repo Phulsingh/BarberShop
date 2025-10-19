@@ -11,6 +11,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import BarbarLogo from '@/assets/BarbarLogo.png'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
+import { useCartServices } from '@/services/cartServices'
 
 
 const Header = () => {
@@ -18,6 +19,22 @@ const Header = () => {
   const Navigate = useNavigate()
   const { logout } = useAuth()
   const [isSheetOpen, setIsSheetOpen] = React.useState(false)
+  const [cartItemCount, setCartItemCount] = React.useState(0)
+  const { getCartItems } = useCartServices()
+
+  // Fetch cart items when component mounts
+  React.useEffect(() => {
+    const fetchCartItems = async () => {
+      try {
+        const items = await getCartItems();
+        setCartItemCount(items.length);
+      } catch (error) {
+        console.error('Error fetching cart items:', error);
+      }
+    };
+
+    fetchCartItems();
+  }, []); // Empty dependency array means this runs once when component mounts
 
   const navItems = [  
     { label: 'Home', href: '/home' },
@@ -100,7 +117,11 @@ const Header = () => {
 
             <Button onClick={() => Navigate("/cart") } variant="ghost" className="p-2 h-8 w-8 relative cursor-pointer">
               <ShoppingCart className="h-5 w-5" />
-              <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">0</span>
+              {cartItemCount > 0 && (
+                <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
             </Button>
 
             <div className="relative">
