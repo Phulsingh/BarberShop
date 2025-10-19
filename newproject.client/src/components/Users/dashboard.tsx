@@ -7,91 +7,102 @@ import { useNavigate } from "react-router-dom";
 import { useBarberServices } from "@/services/BarberServices";
 import type { IBarberService } from "@/services/BarberServices";
 import { useEffect, useState } from "react";
+import { useCartServices } from '@/services/cartServices';
+
+
+const offers = [
+  {
+    id: 1,
+    title: "Monday Special",
+    description: "20% off on all services",
+    validUntil: "Valid only on Mondays"
+  },
+  {
+    id: 2,
+    title: "Student Discount",
+    description: "15% off with valid student ID",
+    validUntil: "Valid throughout the semester"
+  }
+];
+
+const testimonials = [
+  {
+    id: 1,
+    name: "John Doe",
+    rating: 5,
+    comment: "Best haircut experience ever! Very professional and friendly staff.",
+    date: "2 days ago"
+  },
+  {
+    id: 2,
+    name: "Mike Smith",
+    rating: 5,
+    comment: "Great attention to detail. Will definitely come back!",
+    date: "1 week ago"
+  }
+];
+
 
 const Dashboard = () => {
-
+  const navigate = useNavigate();
   const [services, setServices] = useState<IBarberService[]>([]);
- 
 
   const { getAllServices } = useBarberServices();
+  const cartServices = useCartServices();
+  const [addedServices, setAddedServices] = useState<number[]>([]);
 
-  useEffect(()=>{
-    const fetchServices = async () => {
-      const allServices = await getAllServices();
-      setServices(allServices); // Assuming the API response has a 'data' field containing the services
+
+  useEffect(() => {
+    const fetchServicesAndCart = async () => {
+      try {
+        // Fetch all services
+        const allServices = await getAllServices();
+        setServices(allServices);
+
+        // Fetch cart items and update addedServices state
+        const cartItems = await cartServices.getCartItems();
+        const cartServiceIds = cartItems.map(item => item.serviceId);
+        setAddedServices(cartServiceIds);
+      } catch (error) {
+        console.error('Error fetching services and cart:', error);
+      }
     };
-    fetchServices();
+    fetchServicesAndCart();
   }, [])
 
-  const navigate = useNavigate();
-  // Static data for demonstration
-  //   const services = [
-  //   {
-  //     id: 1,
-  //     name: "Classic Haircut",
-  //     price: "$25",
-  //     duration: "30 min",
-  //     description: "Traditional haircut with precision trimming and styling",
-  //     image: "https://cdn.shopify.com/s/files/1/0899/2676/2789/files/Classic_Side_Part.jpg?v=1735326797",
-  //     category: "Hair"
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Beard Trim",
-  //     price: "$15",
-  //     duration: "20 min",
-  //     description: "Professional beard shaping and trimming service",
-  //     image: "https://i.ytimg.com/vi/MakC821Jty8/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLC6Zk2wSyF0TzqOsCzhPCMfGMdLqA",
-  //     category: "Beard"
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Hair Color",
-  //     price: "$50",
-  //     duration: "60 min",
-  //     description: "Full hair coloring service with premium products",
-  //     image: "https://static.vecteezy.com/system/resources/thumbnails/056/634/373/small_2x/a-young-man-with-red-hair-and-a-turtle-neck-photo.jpeg",
-  //     category: "Color"
-  //   }
-  // ];
 
-
-  const offers = [
-    {
-      id: 1,
-      title: "Monday Special",
-      description: "20% off on all services",
-      validUntil: "Valid only on Mondays"
-    },
-    {
-      id: 2,
-      title: "Student Discount",
-      description: "15% off with valid student ID",
-      validUntil: "Valid throughout the semester"
+  const handleAddToCart = async (serviceId: number) => {
+    try {
+      console.log('Adding to cart:', serviceId);
+      await cartServices.addToCart(serviceId);
+      setAddedServices((prev) => [...prev, serviceId]);
+      alert("Service added to cart!");
+    } catch (error: any) {
+      console.error('Add to cart error:', error);
+      alert("Failed to add service to cart.");
     }
-  ];
+  };
 
-  const testimonials = [
-    {
-      id: 1,
-      name: "John Doe",
-      rating: 5,
-      comment: "Best haircut experience ever! Very professional and friendly staff.",
-      date: "2 days ago"
-    },
-    {
-      id: 2,
-      name: "Mike Smith",
-      rating: 5,
-      comment: "Great attention to detail. Will definitely come back!",
-      date: "1 week ago"
-    }
-  ];
+
+
+
 
   return (
-    <div className="w-full mt-16 max-w-7xl mx-auto px-4 py-8">
+    <div className="w-full mt-13 max-w-7xl mx-auto px-4 py-8">
+      {/* Offers Marquee */}
+      <section className="overflow-hidden bg-gradient-to-r from-black to-primary rounded-lg">
+        <div className="py-7 relative flex justify-center items-center">
+          <div className="flex items-center animate-scroll whitespace-nowrap absolute left-0">
+            <span className="text-2xl font-bold text-yellow-400 px-4">🎉 Special Offer: 20% OFF on First Visit! 🎉</span>
+            <span className="text-2xl font-bold text-white px-4">💈 Premium Haircut + Free Beard Trim</span>
+            <span className="text-2xl font-bold text-emerald-400 px-4">🎁 Refer a Friend & Get ₹200 Off!</span>
+            <span className="text-2xl font-bold text-pink-400 px-4">✨ Student Special: 15% Discount with ID</span>
+            <span className="text-2xl font-bold text-cyan-400 px-4">🌟 Senior Citizen Special: Extra Care, Special Price</span>
+          </div>
+        </div>
+      </section>
       {/* Hero Section */}
-      <section className="relative h-[300px] sm:h-[400px] rounded-xl overflow-hidden mb-12">
+      <section className="relative h-[300px] sm:h-[400px] rounded-xl overflow-hidden mt-5 mb-12">
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/40 z-10" />
 
@@ -116,7 +127,7 @@ const Dashboard = () => {
 
             {/* Buttons */}
             <div className="flex  sm:flex-row gap-3 sm:gap-4">
-              <Button 
+              <Button
                 onClick={() => navigate('/book-now')}
                 size="lg"
                 className="hover:bg-white hover:text-black cursor-pointer text-base sm:text-lg px-6 sm:px-8"
@@ -137,8 +148,9 @@ const Dashboard = () => {
       </section>
 
 
+
       {/* Services Section */}
-      
+
       {/* Services Grid */}
       <section className="mb-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -175,8 +187,13 @@ const Dashboard = () => {
                   <Button className="flex-1" variant="default">
                     Book Now
                   </Button>
-                  <Button className="flex-1" variant="outline">
-                    Add to Cart
+                  <Button
+                    className="flex-1"
+                    variant="outline"
+                    onClick={() => service.id && handleAddToCart(service.id)}
+                    disabled={Boolean(service.id && addedServices.includes(service.id))}
+                  >
+                    {Boolean(service.id && addedServices.includes(service.id)) ? "Added ✅" : "Add to Cart"}
                   </Button>
                 </div>
               </div>
