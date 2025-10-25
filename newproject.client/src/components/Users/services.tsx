@@ -104,11 +104,11 @@ const Services = () => {
 
                 {/* Action Buttons */}
                 <div className="mt-auto flex gap-2">
-                  <Button className="flex-1" variant="default">
+                  <Button className="flex-1 cursor-pointer" variant="default">
                     Book Now
                   </Button>
                   <Button
-                    className="flex-1"
+                    className="flex-1 cursor-pointer"
                     variant="outline"
                     onClick={() => service.id && handleAddToCart(service.id)}
                     disabled={Boolean(service.id && addedServices.includes(service.id))}

@@ -10,6 +10,7 @@ namespace NewProject.Server.Data
         public DbSet<User> Users => Set<User>();
         public DbSet<BarbarServices> BarbarServices => Set<BarbarServices>();
         public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<Offer> Offers { get; set; }
     }
 }
 
