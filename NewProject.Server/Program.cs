@@ -53,6 +53,9 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDbContext<AppDbContext>(opts =>
     opts.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConn")));
 
+// 🟡 3.1️⃣ AutoMapper
+builder.Services.AddAutoMapper(typeof(NewProject.Server.NewFolder.OffersMapping));
+
 // 🟡 4️⃣ JWT Auth
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 
