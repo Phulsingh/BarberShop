@@ -117,10 +117,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
     };
     const logout = () => {
+        localStorage.removeItem("UserData");
+        sessionStorage.removeItem('rememberedEmail');
+        sessionStorage.removeItem('cleanLogout');
         setUser(null);
         setToken(null);
         setAuthentication(false);
         localStorage.removeItem(AUTHTOKEN);
+       
         // Set a flag to indicate this is a clean logout
         sessionStorage.setItem('cleanLogout', 'true');
         // Navigate to login page without any query parameters
