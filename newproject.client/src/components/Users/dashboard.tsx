@@ -141,7 +141,7 @@ const Dashboard = () => {
   return (
     <div className="w-full mt-13 max-w-7xl mx-auto px-4 py-8">
       {/* Offers Marquee */}
-      <section className="overflow-hidden bg-gradient-to-r from-black to-primary rounded-lg">
+      {/* <section className="overflow-hidden bg-gradient-to-r from-black to-primary rounded-lg">
         <div className="py-7 relative flex justify-center items-center">
           <div className="flex items-center animate-scroll whitespace-nowrap absolute left-0">
             <span className="text-2xl font-bold text-yellow-400 px-4">🎉 Special Offer: 20% OFF on First Visit! 🎉</span>
@@ -151,7 +151,7 @@ const Dashboard = () => {
             <span className="text-2xl font-bold text-cyan-400 px-4">🌟 Senior Citizen Special: Extra Care, Special Price</span>
           </div>
         </div>
-      </section>
+      </section> */}
       {/* Hero Section */}
       <section className="relative h-[300px] sm:h-[400px] rounded-xl overflow-hidden mt-5 mb-12">
         {/* Gradient Overlay */}
