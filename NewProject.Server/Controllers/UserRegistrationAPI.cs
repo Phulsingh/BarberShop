@@ -8,6 +8,9 @@ using System.Text;
 using NewProject.Server.Data;
 using NewProject.Server.DTO;
 using NewProject.Server.Models;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace NewProject.Server.Controllers
 {
@@ -17,11 +20,88 @@ namespace NewProject.Server.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _config;
+        private readonly IMapper _mapper;
+        private readonly IWebHostEnvironment _env;
 
-        public UsersController(AppDbContext context, IConfiguration config)
+        public UsersController(AppDbContext context, IConfiguration config, IMapper mapper, IWebHostEnvironment env)
         {
             _context = context;
             _config = config;
+            _mapper = mapper;
+            _env = env;
+        }
+
+        // PUT api/users/update-profile/{id}
+        [Authorize]
+        [HttpPut("update-profile/{id}")]
+        [Consumes("multipart/form-data")] // required for file upload
+        public async Task<IActionResult> UpdateProfile(int id, [FromForm] UserProfileUpdateRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+                return NotFound(new { message = "User not found" });
+
+            // Map all fields except Avatar and Password
+            _mapper.Map(request, user);
+
+            // Handle password update
+            if (!string.IsNullOrEmpty(request.Password))
+                user.PasswordHash = HashPassword(request.Password);
+
+            // 📸 Handle Avatar Upload
+            if (request.Avatar != null && request.Avatar.Length > 0)
+            {
+                // Allowed file extensions
+                var allowedExts = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                var ext = Path.GetExtension(request.Avatar.FileName).ToLowerInvariant();
+                if (!allowedExts.Contains(ext))
+                    return BadRequest("Only .jpg, .jpeg, .png, .gif files are allowed.");
+
+                // Max file size: 2MB
+                const long maxFileSize = 2 * 1024 * 1024;
+                if (request.Avatar.Length > maxFileSize)
+                    return BadRequest("File too large. Max 2MB allowed.");
+
+                // Upload folder
+                var uploadsFolder = Path.Combine(
+                    _env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"),
+                    "avatars"
+                );
+                Directory.CreateDirectory(uploadsFolder);
+
+                // Save file
+                var fileName = $"{Guid.NewGuid()}{ext}";
+                var filePath = Path.Combine(uploadsFolder, fileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await request.Avatar.CopyToAsync(stream);
+                }
+
+                // Save full URL in DB
+                user.Avatar = $"/avatars/{fileName}";
+            }
+
+            // Set UpdatedAt timestamp
+            user.UpdatedAt = DateTime.UtcNow;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            // Map to DTO for response
+            var userDto = _mapper.Map<UserProfileUpdateDTO>(user);
+
+            // Convert Avatar to full URL for frontend
+            if (!string.IsNullOrEmpty(userDto.Avatar))
+                userDto.Avatar = $"{Request.Scheme}://{Request.Host}{userDto.Avatar}";
+
+            return Ok(new
+            {
+                message = "Profile updated successfully.",
+                user = userDto
+            });
         }
 
         // POST api/users/register
@@ -59,7 +139,7 @@ namespace NewProject.Server.Controllers
                 }
             });
         }
-
+        
         // POST api/users/login
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
