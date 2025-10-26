@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList} from '../ui/navigation-menu'
-// import { Input } from '../ui/input'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Button } from '../ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet'
@@ -17,10 +16,11 @@ import { useCartServices } from '@/services/cartServices'
 const Header = () => {
   const isMobile = useIsMobile()
   const Navigate = useNavigate()
-  const { logout } = useAuth()
+  const { logout , user} = useAuth()
   const [isSheetOpen, setIsSheetOpen] = React.useState(false)
   const [cartItemCount, setCartItemCount] = React.useState(0)
-  const { getCartItems } = useCartServices()
+  const { getCartItems } = useCartServices();
+
 
   // Fetch cart items when component mounts
   React.useEffect(() => {
@@ -48,6 +48,7 @@ const Header = () => {
   const HandleLogout = () => {
     logout();
   }
+
 
   const NavContent = () => {
     const location = useLocation();
@@ -129,8 +130,8 @@ const Header = () => {
                 <PopoverTrigger asChild>
                   <Button variant="ghost" className="p-0 h-8 w-8">
                     <Avatar className='cursor-pointer'>
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                      <AvatarFallback>CN</AvatarFallback>
+                      <AvatarImage src={user?.avatar} />
+                      <AvatarFallback>{user?.fullName ? user.fullName.charAt(0) : 'U'}</AvatarFallback>
                     </Avatar>
                   </Button>
                 </PopoverTrigger>
