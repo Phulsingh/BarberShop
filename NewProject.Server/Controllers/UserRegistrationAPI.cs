@@ -104,6 +104,30 @@ namespace NewProject.Server.Controllers
             });
         }
 
+
+        // GET api/users/profile/{id}
+        [Authorize]
+        [HttpGet("profile/{id}")]
+        public async Task<IActionResult> GetProfile(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+                return NotFound(new { message = "User not found" });
+
+            var userDto = _mapper.Map<UserProfileUpdateDTO>(user);
+
+            // Convert Avatar to full URL
+            if (!string.IsNullOrEmpty(userDto.Avatar))
+                userDto.Avatar = $"{Request.Scheme}://{Request.Host}{userDto.Avatar}";
+
+            return Ok(new
+            {
+                message = "User profile fetched successfully.",
+                user = userDto
+            });
+        }
+
+
         // POST api/users/register
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
