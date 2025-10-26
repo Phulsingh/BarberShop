@@ -158,6 +158,6 @@ C:\Users\hp\Desktop\NewProject\NewProject.Server\obj\Debug\net8.0\NewProject.Ser
 C:\Users\hp\Desktop\NewProject\NewProject.Server\obj\Debug\net8.0\ref\NewProject.Server.dll
 C:\Users\hp\Desktop\NewProject\NewProject.Server\bin\Debug\net8.0\NewProject.Server.staticwebassets.runtime.json
 C:\Users\hp\Desktop\NewProject\NewProject.Server\obj\Debug\net8.0\NewProject.Server.sourcelink.json
-C:\Users\hp\Desktop\NewProject\NewProject.Server\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\hp\Desktop\NewProject\NewProject.Server\bin\Debug\net8.0\AutoMapper.dll
 C:\Users\hp\Desktop\NewProject\NewProject.Server\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\hp\Desktop\NewProject\NewProject.Server\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
