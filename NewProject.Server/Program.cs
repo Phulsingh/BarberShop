@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NewProject.Server.Data;
 using NewProject.Server.Mapping;
+using NewProject.Server.Mappings;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -57,6 +58,7 @@ builder.Services.AddDbContext<AppDbContext>(opts =>
 // 🟡 3.1️⃣ AutoMapper
 builder.Services.AddAutoMapper(typeof(NewProject.Server.NewFolder.OffersMapping));
 builder.Services.AddAutoMapper(typeof(UserProfileMapping));
+builder.Services.AddAutoMapper(typeof(ReviewMapping));
 
 // 🟡 4️⃣ JWT Auth
 var jwtSettings = builder.Configuration.GetSection("Jwt");

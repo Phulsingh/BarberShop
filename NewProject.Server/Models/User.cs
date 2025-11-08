@@ -25,5 +25,7 @@ namespace NewProject.Server.Models
         public string? PinCode { get; set; }
         public string? Gender { get; set; }
 
+        // 👇 Add this line
+        public ICollection<CustomerReview>? Reviews { get; set; }
     }
 }
