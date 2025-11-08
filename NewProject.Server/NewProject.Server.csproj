@@ -45,4 +45,8 @@
     <None Include="C:\Users\hp\Desktop\NewProject\NewProject.Server\NewFolder\.editorconfig" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTO\NewFolder\" />
+  </ItemGroup>
+
 </Project>
